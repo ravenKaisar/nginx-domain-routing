@@ -9,14 +9,19 @@ sudo chmod a+r /etc/apt/keyrings/docker.gpg -y
 
 # Add the repository to Apt sources:
 echo \
-    "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
   "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" |
-    sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+  sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 sudo apt-get update -y
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-sudo docker run --name nginx -d \
-    -p 80:80 \
-    --restart unless-stopped \
-    nginx:alpine
+cd /home/ubuntu
+mkdir data
+password=$(openssl rand -base64 48 | cut -c1-16)
+sudo docker run --name mysql -d \
+  -p 3306:3306 \
+  -e MYSQL_ROOT_PASSWORD=$password \
+  -v /home/ubuntu/data:/var/lib/mysql \
+  --restart unless-stopped \
+  mysql:8
