@@ -2,7 +2,7 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY . /app
+COPY services/react /app
 
 RUN yarn install
 RUN yarn build
