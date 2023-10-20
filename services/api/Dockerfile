@@ -1,10 +1,11 @@
 FROM node:18-alpine
 
-RUN mkdir -p api
 WORKDIR /api
 
-COPY . /api
+COPY services/api /api
 
 RUN yarn install
+
+EXPOSE 8000
 
 CMD [ "node", "server.js" ]
