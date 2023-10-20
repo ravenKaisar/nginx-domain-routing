@@ -1,0 +1,32 @@
+name: Application Build
+on:
+  push:
+    branches:
+      - main
+jobs:
+  production-build:
+    name: Production Build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Git Repo
+        uses: actions/checkout@v3
+      - name: Docker Login
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          docker login docker.pkg.github.com -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: Production Build Script
+        run: |
+          docker build -f services/database/Dockerfile . -t distributed:db
+          docker tag distributed:db docker.pkg.github.com/ravenkaisar/nginx-domain-routing/distributed:db
+          docker push docker.pkg.github.com/ravenkaisar/nginx-domain-routing/distributed:db
+
+          docker build -f services/api/Dockerfile . -t distributed:api
+          docker tag distributed:api docker.pkg.github.com/ravenkaisar/nginx-domain-routing/distributed:api
+          docker push docker.pkg.github.com/ravenkaisar/nginx-domain-routing/distributed:api
+          
+          docker build -f services/react/Dockerfile . -t distributed:react
+          docker tag distributed:react docker.pkg.github.com/ravenkaisar/nginx-domain-routing/distributed:react
+          docker push docker.pkg.github.com/ravenkaisar/nginx-domain-routing/distributed:react
