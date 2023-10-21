@@ -24,4 +24,4 @@ sudo docker run --name mysql -d \
   -e MYSQL_ROOT_PASSWORD=$password \
   -v /home/ubuntu/data:/var/lib/mysql \
   --restart unless-stopped \
-  mysql:8
+  docker.pkg.github.com/ravenkaisar/nginx-domain-routing/distributed:db
