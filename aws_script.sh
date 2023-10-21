@@ -132,6 +132,7 @@ application_vm=$(aws ec2 run-instances \
     --security-group-ids $sg_application_id \
     --associate-public-ip-address \
     --region $AWS_REGION \
+    --user-data file://./application_script.sh \
     --output yaml)
 
 application_vm_id=$(echo "$application_vm" | grep InstanceId | sed 's/://g;s/ //g;s/InstanceId//g;')
