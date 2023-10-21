@@ -13,8 +13,7 @@ const getCustomerInfoById = async (id) => {
     return connection.execute(query);
 };
 const createCustomer = async (params) => {
-    const data = JSON.parse(params)
-    const query = `INSERT INTO customers (name, email) VALUES ('${data.name}', '${data.email}')`;
+    const query = `INSERT INTO customers (name, email) VALUES ('${params.name}', '${params.email}')`;
     const connection = await mysql.createConnection(mysqlConfig);
     return connection.execute(query);
 };

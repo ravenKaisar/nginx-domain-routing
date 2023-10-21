@@ -4,9 +4,6 @@ import express from "express";
 import cors from "cors";
 import { getCustomerInfoById, getCustomersList, createCustomer, deleteCustomerById } from "./services/mysql.js";
 
-
-dotenv.config();
-// environment variables
 const expressPort = process.env.PORT || 8000;
 
 //express
@@ -30,8 +27,11 @@ app.get("/api/v1/customers", async (req, res) => {
 
 app.post("/api/v1/customers", async (req, res) => {
     const body = req.body;
+    if (!body?.name || !body?.email) {
+        res.status(422).json({ message: "Error", errors: 'Name or Email field required' });
+    }
     try {
-        await createCustomer(JSON.stringify(body));
+        await createCustomer(body);
         res.status(200).json({ message: "Success" });
     } catch (error) {
         res.status(500).json({ message: "Error", error });
